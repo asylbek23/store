@@ -69,7 +69,6 @@
     await axios
       .get("https://fakestoreapi.com/products/")
       .then((data) => {
-        // console.log(data)
         products.value = data.data
       })
       .catch((error) => {
@@ -85,18 +84,6 @@
     filteredCategories.value = Array.from(categories)
   }
 
-  // 1. Создается новый объект Set с именем categories. Объект Set представляет собой коллекцию уникальных значений, то есть он хранит только уникальные элементы.
-
-  // 2. Затем функция выполняет итерацию по массиву products, который содержит информацию о продуктах. Это делается с помощью метода forEach.
-
-  // 3. Внутри цикла для каждого продукта из массива products извлекается значение свойства category продукта (предположительно, это строка, указывающая на категорию продукта).
-
-  // 4. Значение category добавляется в объект Set categories. Поскольку объект Set хранит только уникальные значения, он автоматически отфильтровывает повторяющиеся категории, и в результате в categories остаются только уникальные категории продуктов.
-
-  // 5. Наконец, функция преобразует объект Set в массив с помощью Array.from(categories) и присваивает результат этой операции переменной filteredCategories.value. Теперь filteredCategories будет содержать массив уникальных категорий, извлеченных из продуктов.
-
-  // P.S. Этот код полезен, когда вам нужно получить список уникальных значений из массива данных, как в случае с категориями продуктов. Он гарантирует, что каждая категория учитывается только один раз в итоговом списке filteredCategories.
-
   function filterProductsByCategory(category) {
     if (category === selectedCategory.value) {
       selectedCategory.value = null
@@ -111,7 +98,7 @@
   })
 
   watchEffect(() => {
-    // Поиск
+    // Поиск продуктов
     filteredProducts.value = products.value.filter((product) =>
       product.title.toLowerCase().includes(searchText.value.toLowerCase())
     )
