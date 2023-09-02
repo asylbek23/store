@@ -28,15 +28,16 @@
       </div>
 
       <div class="products">
-        <a
-          href="#"
+        <div
           class="product"
           v-for="product in filteredProducts"
           :key="product.id">
-          <div class="product__img">
-            <!-- <p class="product__category">{{ product.category }}</p> -->
-            <img :src="product.image" :alt="product.title" :img="true" />
-          </div>
+          <router-link
+            :to="{ name: 'productDetails', params: { id: product.id } }">
+            <div class="product__img">
+              <img :src="product.image" :alt="product.title" :img="true" />
+            </div>
+          </router-link>
           <div class="product__info">
             <p class="product__name">{{ truncateText(product.title, 45) }}</p>
             <p class="product__price">{{ product.price }}$</p>
@@ -44,7 +45,7 @@
               {{ truncateText(product.description, 100) }}
             </p>
           </div>
-        </a>
+        </div>
 
         <p v-if="filteredProducts.length === 0" class="not-found">
           Nothing found &#129335;&#8205;&#9794;&#65039;
@@ -56,8 +57,8 @@
 
 <script setup>
   import { ref, watchEffect, onMounted, watch } from "vue"
-  import axios from "axios"
-  import { truncateText } from "../helpers/textUtils"
+  import axiosClient from "../../api/axiosClient"
+  import { truncateText } from "../../helpers/textUtils"
 
   const searchText = ref("")
   const products = ref([])
@@ -66,8 +67,8 @@
   const selectedCategory = ref(null)
 
   async function getProduct() {
-    await axios
-      .get("https://fakestoreapi.com/products/")
+    await axiosClient
+      .get("products/")
       .then((data) => {
         products.value = data.data
       })
@@ -114,3 +115,7 @@
     }
   })
 </script>
+
+<style lang="scss" module>
+  @import "Home.module.scss";
+</style>
