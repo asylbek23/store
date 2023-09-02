@@ -1,5 +1,5 @@
 <template>
-  <div class="product-details">
+  <div :class="$style.product">
     <div class="container">
       <h1>Product details</h1>
       <div class="product-details__content">
@@ -15,7 +15,7 @@
 <script setup>
   import { ref, onMounted } from "vue"
   import { useRoute } from "vue-router"
-  import axiosClient from "../../api/axiosClient"
+  import axiosClient from "@/src/api/axiosClient.js"
 
   const route = useRoute()
   const product = ref({})

@@ -5,6 +5,11 @@ import vue from "@vitejs/plugin-vue"
 export default defineConfig({
   plugins: [vue()],
   css: {
-    modules: true,
+    modules: true, // Включение поддержки модульных стилей
+  },
+  resolve: {
+    alias: {
+      "@": "./",
+    },
   },
 })
