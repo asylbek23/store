@@ -1,0 +1,53 @@
+.filter {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 20px;
+  margin-top: 20px;
+
+  @include sm-block() {
+    flex-direction: column;
+  }
+
+  h3 {
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  &__items {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    @include sm-block() {
+      flex-wrap: wrap;
+    }
+
+    :global {
+      .is-active {
+        color: #fff;
+        border: 1px solid #d08441;
+        background-color: #d08441;
+
+        &:hover {
+          background-color: #d08441;
+        }
+      }
+    }
+  }
+
+  &__item {
+    text-transform: capitalize;
+    cursor: pointer;
+    padding: 3px 10px;
+    border: 1px solid #ffab61;
+    letter-spacing: 1px;
+    transition: all 0.25s;
+    white-space: nowrap;
+    text-align: center;
+
+    &:hover {
+      background-color: lighten(#ffab61, 10%);
+    }
+  }
+}

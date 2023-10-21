@@ -1,35 +1,105 @@
 <template>
+  <!-- Корневой элемент страницы с деталями продукта -->
   <div :class="$style['product-page']">
     <div class="container">
       <h1 class="title">Product details</h1>
-      <div :class="$style.product">
-        <img class="product-img" :src="product.image" :alt="product.title" />
-        <h2 class="product-title">{{ product.title }}</h2>
-        <div class="product-price">
-          Price:
-          <span>{{ product.price }}$</span>
+
+      <!-- Блок с информацией о продукте, отображается, если продукт загружен -->
+      <div v-if="product && product.id" :class="$style['product-block']">
+        <!-- Блок с изображением продукта -->
+        <div :class="$style['product-img']">
+          <img :src="product.image" :alt="product.title" />
         </div>
-        <p class="product-descr">{{ product.description }}</p>
+        <!-- Блок с информацией о продукте -->
+        <div :class="$style['product-info']">
+          <h2 :class="$style['product-title']">{{ product.title }}</h2>
+          <div :class="$style['product-price']">
+            Price:
+            <span>{{ product.price }}$</span>
+          </div>
+          <p :class="$style['product-descr']">{{ product.description }}</p>
+        </div>
       </div>
+
+      <!-- Блок загрузки, отображается, если продукт не загружен -->
+      <div v-else :class="$style['product-loading']">Loading...</div>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { ref, onMounted } from "vue"
-  import { useRoute } from "vue-router"
-  import axiosClient from "@/src/api/axiosClient.js"
+  import { ref, onMounted, onUnmounted } from "vue";
+  import {
+    useRoute,
+    onBeforeRouteUpdate,
+    onBeforeRouteLeave,
+  } from "vue-router";
+  import axiosClient from "@/api/axiosClient.js";
+  import { useBreadcrumbStore } from "@/stores/breadcrumbStore.js";
 
-  const route = useRoute()
-  const product = ref({})
+  const route = useRoute();
+  const product = ref({});
+  const breadcrumbStore = useBreadcrumbStore();
+  const intervalId = ref(null);
 
-  onMounted(() => {
-    axiosClient.get(`products/${route.params.id}`).then((data) => {
-      product.value = data.data
-    })
-  })
+  // Функция для получения данных о продукте
+  const fetchProduct = async (id) => {
+    const localStorageKey = `product_${id}`;
+    const cachedProduct = JSON.parse(localStorage.getItem(localStorageKey));
+
+    if (cachedProduct) {
+      // Если продукт найден в localStorage, используйте его
+      product.value = cachedProduct;
+      breadcrumbStore.setTitle(cachedProduct.title);
+      breadcrumbStore.setLoading(false);
+    } else {
+      try {
+        const response = await axiosClient.get(`products/${id}`);
+        product.value = response.data;
+        breadcrumbStore.setTitle(product.value.title);
+        breadcrumbStore.setLoading(false); // устанавливаем isLoading в false после загрузки данных
+
+        // Сохраните продукт в localStorage для будущего использования
+        localStorage.setItem(localStorageKey, JSON.stringify(response.data));
+      } catch (error) {
+        console.error("Failed to load product data:", error);
+      }
+    }
+  };
+
+  // Обработчик перед покиданием маршрута
+  onBeforeRouteLeave(async (to, from, next) => {
+    breadcrumbStore.resetTitle();
+    next();
+  });
+
+  // Обработчик перед обновлением маршрута
+  onBeforeRouteUpdate(async (to, from, next) => {
+    await fetchProduct(to.params.id);
+    next();
+  });
+
+  // Обработчик при монтировании компонента
+  onMounted(async () => {
+    const routeId = route.params.id;
+    await fetchProduct(routeId); // Первая попытка загрузки
+
+    // Настроить повторные попытки каждые 2 секунд, если первая попытка не удалась
+    intervalId.value = setInterval(async () => {
+      await fetchProduct(routeId);
+    }, 2000);
+  });
+
+  // Обработчик при размонтировании компонента
+  onUnmounted(() => {
+    // Остановите интервал, когда компонент размонтируется, чтобы избежать утечек памяти
+    if (intervalId.value) {
+      clearInterval(intervalId.value);
+    }
+  });
 </script>
 
+<!-- Стили для страницы с деталями продукта -->
 <style lang="scss" module>
   @import "ProductDetails.module.scss";
 </style>

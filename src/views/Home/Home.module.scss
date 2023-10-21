@@ -1,3 +1,24 @@
-.filter {
-  text-align: center;
+.home {
+  margin-top: 20px;
+}
+
+.search {
+  width: 100%;
+  padding: 10px 20px;
+  font-size: 18px;
+
+  @include sm-block() {
+    font-size: 16px;
+    padding: 5px 10px;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }

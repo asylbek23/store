@@ -1,121 +1,142 @@
 <template>
-  <div>
+  <!-- Корневой элемент домашней страницы -->
+  <div :class="$style['home']">
     <div class="container">
+      <!-- Поле поиска продуктов -->
       <input
         type="text"
-        class="search"
+        :class="$style['search']"
         v-model="searchText"
         placeholder="Search products" />
 
-      <div class="filter">
-        <h3>Filter:</h3>
-        <div class="filter__items">
-          <div
-            :class="{ 'is-active': selectedCategory === null }"
-            @click="filterProductsByCategory(null)"
-            class="filter__item">
-            All
-          </div>
-          <div
-            v-for="category in filteredCategories"
-            :key="category"
-            @click="filterProductsByCategory(category)"
-            :class="{ 'is-active': category === selectedCategory }"
-            class="filter__item">
-            {{ category }}
-          </div>
-        </div>
-      </div>
+      <!-- Компонент фильтрации продуктов по категориям -->
+      <Filter
+        :filtered-categories="filteredCategories"
+        :selected-category="selectedCategory"
+        @update-category="updateCategory" />
 
-      <div class="products">
-        <div
-          class="product"
-          v-for="product in filteredProducts"
-          :key="product.id">
-          <router-link
-            :to="{ name: 'productDetails', params: { id: product.id } }">
-            <div class="product__img">
-              <img :src="product.image" :alt="product.title" :img="true" />
-            </div>
-          </router-link>
-          <div class="product__info">
-            <p class="product__name">{{ truncateText(product.title, 45) }}</p>
-            <p class="product__price">{{ product.price }}$</p>
-            <p class="product__descr">
-              {{ truncateText(product.description, 100) }}
-            </p>
-          </div>
-        </div>
+      <!-- Компонент списка продуктов -->
+      <Products :products="filteredProducts" :show-modal="showModal" />
 
-        <p v-if="filteredProducts.length === 0" class="not-found">
-          Nothing found &#129335;&#8205;&#9794;&#65039;
-        </p>
-      </div>
+      <!-- Оверлей модального окна, отображается при выборе продукта -->
+      <div
+        v-if="selectedProduct"
+        :class="$style['overlay']"
+        @click="closeModal"></div>
+
+      <!-- Модальное окно с деталями продукта -->
+      <product-modal
+        :product="selectedProduct"
+        :close-modal="closeModal"
+        v-if="selectedProduct" />
     </div>
   </div>
 </template>
 
 <script setup>
-  import { ref, watchEffect, onMounted, watch } from "vue"
-  import axiosClient from "../../api/axiosClient"
-  import { truncateText } from "../../helpers/textUtils"
+  import { ref, onMounted, onUnmounted, watch, watchEffect } from "vue";
+  import axiosClient from "@/api/axiosClient.js";
+  import Filter from "@/components/Filter/Filter.vue";
+  import Products from "@/components/Products/Products.vue";
+  import ProductModal from "@/components/ProductModal.vue";
 
-  const searchText = ref("")
-  const products = ref([])
-  const filteredProducts = ref([])
-  const filteredCategories = ref([])
-  const selectedCategory = ref(null)
+  // Состояние компонента
+  const products = ref(JSON.parse(localStorage.getItem("products")) || []);
+  const searchText = ref("");
+  const filteredProducts = ref([]);
+  const filteredCategories = ref([]);
+  const selectedCategory = ref(null);
+  const selectedProduct = ref(null);
 
-  async function getProduct() {
-    await axiosClient
-      .get("products/")
-      .then((data) => {
-        products.value = data.data
-      })
-      .catch((error) => {
-        console.log("Ошибка при загрузке данных:", error)
-      })
-  }
-
-  function filterCategories() {
-    const categories = new Set()
-    products.value.forEach((product) => {
-      categories.add(product.category)
-    })
-    filteredCategories.value = Array.from(categories)
-  }
-
-  function filterProductsByCategory(category) {
-    if (category === selectedCategory.value) {
-      selectedCategory.value = null
-    } else {
-      selectedCategory.value = category
+  // Получение списка продуктов с сервера или из локального хранилища
+  async function getProducts() {
+    if (products.value.length === 0) {
+      try {
+        const { data } = await axiosClient.get("products/");
+        products.value = data;
+        localStorage.setItem("products", JSON.stringify(products.value));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     }
   }
 
-  onMounted(async () => {
-    await getProduct() // Загрузка данных с сервера
-    filterCategories() // Фильтрация уникальных категорий
-  })
+  // Обновление выбранной категории
+  const updateCategory = (category) => {
+    selectedCategory.value = category;
+    searchText.value = "";
+  };
 
+  // Открытие и закрытие модального окна с деталями продукта
+  function showModal(product) {
+    selectedProduct.value = product;
+    disableScroll();
+  }
+
+  function closeModal() {
+    selectedProduct.value = null;
+    enableScroll();
+  }
+
+  // Блокировка и разблокировка скролла страницы
+  function disableScroll() {
+    const scrollWidth = window.innerWidth - document.body.offsetWidth;
+    document.body.style.paddingRight = `${scrollWidth}px`;
+    document.body.style.overflow = "hidden";
+  }
+
+  function enableScroll() {
+    document.body.style.paddingRight = "";
+    document.body.style.overflow = "";
+  }
+
+  // Обработка событий клавиатуры для закрытия модального окна
+  const onEsc = (event) => {
+    if (event.key === "Escape" && selectedProduct.value) {
+      closeModal();
+    }
+  };
+
+  // Инициализация компонента
+  onMounted(async () => {
+    try {
+      await getProducts();
+      const categories = new Set(
+        products.value.map((product) => product.category)
+      );
+      filteredCategories.value = Array.from(categories);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+    document.addEventListener("keydown", onEsc);
+  });
+
+  // Очистка обработчика событий при уничтожении компонента
+  onUnmounted(() => {
+    document.removeEventListener("keydown", onEsc);
+  });
+
+  // Отслеживание изменений в тексте поиска и фильтрации продуктов
   watchEffect(() => {
-    // Поиск продуктов
+    // Фильтрация продуктов по тексту поиска
     filteredProducts.value = products.value.filter((product) =>
       product.title.toLowerCase().includes(searchText.value.toLowerCase())
-    )
-  })
+    );
+  });
 
+  // Отслеживание выбора категории и фильтрация продуктов по категории
   watch(selectedCategory, () => {
     if (selectedCategory.value === null) {
-      filteredProducts.value = products.value
+      filteredProducts.value = products.value;
     } else {
       filteredProducts.value = products.value.filter(
         (product) => product.category === selectedCategory.value
-      )
+      );
     }
-  })
+  });
 </script>
 
+<!-- Стили для компонента Home -->
 <style lang="scss" module>
   @import "Home.module.scss";
 </style>

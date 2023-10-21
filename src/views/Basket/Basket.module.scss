@@ -1,0 +1,173 @@
+.basket {
+  padding-bottom: 50px;
+
+  &__footer {
+    background-color: #fff;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+
+    & .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &-info {
+    }
+  }
+
+  .checkout {
+    background-color: #e58939;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 8px;
+    text-align: center;
+    padding: 15px 30px;
+  }
+
+  .product-amount,
+  .total-price {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    span {
+      font-weight: 600;
+      font-size: 18px;
+    }
+  }
+
+  .total-price {
+    span {
+      color: #e58939;
+    }
+  }
+}
+
+.product {
+  display: flex;
+  gap: 20px;
+
+  border-bottom: 1px solid #ccc;
+  padding: 20px 0;
+
+  @include xs-block() {
+    flex-direction: column;
+  }
+
+  &:last-child {
+    border: none;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+
+    @include sm-block() {
+      font-size: 18px;
+    }
+  }
+
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 20px;
+
+    width: 100%;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 10px;
+    padding-right: 40px;
+  }
+
+  &__link {
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+    background-color: #fff;
+    padding: 20px;
+
+    @include xs-block() {
+      width: 100%;
+      padding: 10px;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &__price {
+    font-weight: 600;
+    font-size: 18px;
+
+    span {
+      color: #e58939;
+    }
+  }
+
+  &__descr {
+    line-height: 1.5;
+  }
+
+  &__amount {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    :global {
+      .product__quantity-controls {
+        display: flex;
+        align-items: center;
+      }
+
+      .quantity-value {
+        min-width: 15px;
+        text-align: center;
+        margin: 0 10px;
+      }
+
+      .quantity-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 35px !important;
+        height: 30px !important;
+        line-height: 100%;
+
+        background-color: #e18c42;
+        color: #fff;
+        border-radius: 4px;
+        font-size: 24px !important;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .is-disabled {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+.remove-product {
+  color: #ff1d1d;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+  padding: 0;
+  margin-top: auto;
+}
