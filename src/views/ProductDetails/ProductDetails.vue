@@ -34,42 +34,17 @@
     onBeforeRouteUpdate,
     onBeforeRouteLeave,
   } from "vue-router";
-  import axiosClient from "@/api/axiosClient.js";
-  import { useBreadcrumbStore } from "@/stores/breadcrumbStore.js";
+  import { getProduct } from "@/api";
+  import { usebreadcrumb } from "@/stores/breadcrumbs.js";
 
   const route = useRoute();
   const product = ref({});
-  const breadcrumbStore = useBreadcrumbStore();
+  const breadcrumb = usebreadcrumb();
   const intervalId = ref(null);
-
-  // Функция для получения данных о продукте
-  const getProduct = async (id) => {
-    const localStorageKey = `product_${id}`;
-    const cachedProduct = JSON.parse(localStorage.getItem(localStorageKey));
-
-    if (cachedProduct) {
-      // Если продукт найден в localStorage, используйте его
-      product.value = cachedProduct;
-      breadcrumbStore.setTitle(cachedProduct.title);
-      breadcrumbStore.setLoading(false);
-    } else {
-      try {
-        const response = await axiosClient.get(`products/${id}`);
-        product.value = response.data;
-        breadcrumbStore.setTitle(product.value.title);
-        breadcrumbStore.setLoading(false); // устанавливаем isLoading в false после загрузки данных
-
-        // Сохраните продукт в localStorage для будущего использования
-        localStorage.setItem(localStorageKey, JSON.stringify(response.data));
-      } catch (error) {
-        console.error("Failed to load product data:", error);
-      }
-    }
-  };
 
   // Обработчик перед покиданием маршрута
   onBeforeRouteLeave(async (to, from, next) => {
-    breadcrumbStore.resetTitle();
+    breadcrumb.resetTitle();
     next();
   });
 
@@ -82,11 +57,11 @@
   // Обработчик при монтировании компонента
   onMounted(async () => {
     const routeId = route.params.id;
-    await getProduct(routeId); // Первая попытка загрузки
+    await getProduct(routeId, product, breadcrumb); // Первая попытка загрузки
 
     // Настроить повторные попытки каждые 2 секунд, если первая попытка не удалась
     intervalId.value = setInterval(async () => {
-      await getProduct(routeId);
+      await getProduct(routeId, product, breadcrumb);
     }, 2000);
   });
 

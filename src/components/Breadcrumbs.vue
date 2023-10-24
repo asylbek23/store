@@ -7,8 +7,8 @@
         <li><router-link to="/">Main</router-link></li>
 
         <!-- Элемент хлебных крошек для страницы деталей продукта -->
-        <li v-if="route.name === 'productDetails' && breadcrumbStore.title">
-          {{ breadcrumbStore.title }}
+        <li v-if="route.name === 'productDetails' && breadcrumb.title">
+          {{ breadcrumb.title }}
         </li>
 
         <!-- Элемент хлебных крошек из метаданных маршрута -->
@@ -21,7 +21,7 @@
           v-else-if="
             route.name !== 'home' &&
             !route.meta.breadcrumb &&
-            !breadcrumbStore.isLoading
+            !breadcrumb.isLoading
           ">
           {{ route.name }}
         </li>
@@ -33,18 +33,18 @@
 <script setup>
   // Импорт необходимых библиотек и хуков
   import { ref, watch, nextTick } from "vue";
-  import { useBreadcrumbStore } from "@/stores/breadcrumbStore.js";
+  import { usebreadcrumb } from "@/stores/breadcrumbs.js";
   import { useRoute } from "vue-router";
 
   // Получение текущего маршрута и состояния хлебных крошек
   const route = useRoute();
-  const breadcrumbStore = useBreadcrumbStore();
+  const breadcrumb = usebreadcrumb();
   const breadcrumbNav = ref(null);
   const breadcrumbList = ref(null);
 
   // Отслеживание изменений маршрута и состояния хлебных крошек
   watch(
-    [route, breadcrumbStore],
+    [route, breadcrumb],
     () => {
       nextTick(checkBreadcrumbVisibility); // Проверка видимости хлебных крошек после обновления DOM
     },
