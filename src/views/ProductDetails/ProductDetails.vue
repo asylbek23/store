@@ -43,7 +43,7 @@
   const intervalId = ref(null);
 
   // Функция для получения данных о продукте
-  const fetchProduct = async (id) => {
+  const getProduct = async (id) => {
     const localStorageKey = `product_${id}`;
     const cachedProduct = JSON.parse(localStorage.getItem(localStorageKey));
 
@@ -75,18 +75,18 @@
 
   // Обработчик перед обновлением маршрута
   onBeforeRouteUpdate(async (to, from, next) => {
-    await fetchProduct(to.params.id);
+    await getProduct(to.params.id);
     next();
   });
 
   // Обработчик при монтировании компонента
   onMounted(async () => {
     const routeId = route.params.id;
-    await fetchProduct(routeId); // Первая попытка загрузки
+    await getProduct(routeId); // Первая попытка загрузки
 
     // Настроить повторные попытки каждые 2 секунд, если первая попытка не удалась
     intervalId.value = setInterval(async () => {
-      await fetchProduct(routeId);
+      await getProduct(routeId);
     }, 2000);
   });
 
