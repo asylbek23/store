@@ -65,8 +65,8 @@
 </template>
 
 <script setup>
-  import { truncateText } from "@/helpers/textUtils.js"; // Импорт утилиты для обрезки текста
-  import { useCartStore } from "@/stores/cart.js"; // Импорт хранилища корзины
+  import { truncateText } from "@/helpers"; // Импорт утилиты для обрезки текста
+  import { useCartStore } from "@/stores"; // Импорт хранилища корзины
 
   const props = defineProps(["products", "showModal"]); // Определение свойств компонента
   const cartStore = useCartStore(); // Инициализация хранилища корзины

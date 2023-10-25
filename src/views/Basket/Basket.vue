@@ -73,7 +73,7 @@
 
 <script setup>
   // Импорт хранилища корзины и компонента для управления количеством товара
-  import { useCartStore } from "@/stores/cart.js";
+  import { useCartStore } from "@/stores";
   import QuantityControls from "@/components/QuantityControls.vue";
 
   // Инициализация хранилища корзины

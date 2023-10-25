@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 
 // Экспорт функции для работы с хранилищем хлебных крошек, используя defineStore
-export const usebreadcrumb = defineStore({
+export const useBreadcrumb = defineStore({
   id: "breadcrumb", // Уникальный идентификатор хранилища
 
   // Инициализация начального состояния хранилища

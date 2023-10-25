@@ -35,11 +35,11 @@
     onBeforeRouteLeave,
   } from "vue-router";
   import { getProduct } from "@/api";
-  import { usebreadcrumb } from "@/stores/breadcrumbs.js";
+  import { useBreadcrumb } from "@/stores";
 
   const route = useRoute();
   const product = ref({});
-  const breadcrumb = usebreadcrumb();
+  const breadcrumb = useBreadcrumb();
   const intervalId = ref(null);
 
   // Обработчик перед покиданием маршрута

@@ -23,6 +23,6 @@
 
 <script setup>
   // Импорт хранилища корзины и получение его инстанса
-  import { useCartStore } from "@/stores/cart.js";
+  import { useCartStore } from "@/stores";
   const cartStore = useCartStore();
 </script>

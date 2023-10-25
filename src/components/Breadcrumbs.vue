@@ -33,12 +33,12 @@
 <script setup>
   // Импорт необходимых библиотек и хуков
   import { ref, watch, nextTick } from "vue";
-  import { usebreadcrumb } from "@/stores/breadcrumbs.js";
+  import { useBreadcrumb } from "@/stores";
   import { useRoute } from "vue-router";
 
   // Получение текущего маршрута и состояния хлебных крошек
   const route = useRoute();
-  const breadcrumb = usebreadcrumb();
+  const breadcrumb = useBreadcrumb();
   const breadcrumbNav = ref(null);
   const breadcrumbList = ref(null);
 
