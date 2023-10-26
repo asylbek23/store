@@ -4,7 +4,6 @@
     <!-- Кнопка уменьшения количества товара -->
     <button
       @click.prevent="$emit('decrement', item)"
-      class="quantity-button"
       :class="[{ 'is-disabled': itemQuantity <= 1 }, 'quantity-button']"
       :disabled="itemQuantity <= 1">
       <!-- Иконка минус -->
