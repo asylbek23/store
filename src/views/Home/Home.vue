@@ -35,7 +35,7 @@
 
 <script setup>
   import { ref, onMounted, onUnmounted, watch, watchEffect } from "vue";
-  import axiosClient from "@/api/axiosClient.js";
+  import { getProducts } from "@/api";
   import Filter from "@/components/Filter/Filter.vue";
   import Products from "@/components/Products/Products.vue";
   import ProductModal from "@/components/ProductModal.vue";
@@ -47,19 +47,6 @@
   const filteredCategories = ref([]);
   const selectedCategory = ref(null);
   const selectedProduct = ref(null);
-
-  // Получение списка продуктов с сервера или из локального хранилища
-  async function getProducts() {
-    if (products.value.length === 0) {
-      try {
-        const { data } = await axiosClient.get("products/");
-        products.value = data;
-        localStorage.setItem("products", JSON.stringify(products.value));
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    }
-  }
 
   // Обновление выбранной категории
   const updateCategory = (category) => {
@@ -100,7 +87,7 @@
   // Инициализация компонента
   onMounted(async () => {
     try {
-      await getProducts();
+      await getProducts(products);
       const categories = new Set(
         products.value.map((product) => product.category)
       );
