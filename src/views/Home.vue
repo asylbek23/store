@@ -1,11 +1,11 @@
 <template>
   <!-- Корневой элемент домашней страницы -->
-  <div :class="$style['home']">
+  <div class="home">
     <div class="container">
       <!-- Поле поиска продуктов -->
       <input
         type="text"
-        :class="$style['search']"
+        class="search"
         v-model="searchText"
         placeholder="Search products" />
 
@@ -19,10 +19,7 @@
       <Products :products="filteredProducts" :show-modal="showModal" />
 
       <!-- Оверлей модального окна, отображается при выборе продукта -->
-      <div
-        v-if="selectedProduct"
-        :class="$style['overlay']"
-        @click="closeModal"></div>
+      <div v-if="selectedProduct" class="overlay" @click="closeModal"></div>
 
       <!-- Модальное окно с деталями продукта -->
       <product-modal
@@ -123,11 +120,6 @@
   });
 </script>
 
-<!-- Стили для компонента Home -->
-<style lang="scss" module>
-  @import "Home.module.scss";
-</style>
-
 <style lang="scss">
   .products {
     display: grid;
@@ -139,28 +131,37 @@
     position: relative;
   }
 
-  .quick-view {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s, opacity 0.3s linear;
-    font-size: 18px;
-  }
-
   .not-found {
     font-size: 20px;
     font-weight: 500;
-    // text-align: center;
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  .home {
+    margin-top: 20px;
+  }
+
+  .search {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 18px;
+
+    @include sm-block() {
+      font-size: 16px;
+      padding: 5px 10px;
+    }
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 2;
   }
 </style>

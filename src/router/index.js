@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // Импорт компонентов страниц, которые будут использоваться в роутинге
 import DefaultLayout from "@/layout/default.vue";
-import Home from "@/views/Home/Home.vue";
+import Home from "@/views/Home.vue";
 import Basket from "@/views/Basket/Basket.vue";
 import ProductDetails from "@/views/ProductDetails/ProductDetails.vue";
 import NotFound from "@/views/NotFound.vue";
