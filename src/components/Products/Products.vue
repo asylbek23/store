@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style['products']">
+  <div class="products">
     <!-- Цикл по продуктам -->
     <router-link
       :to="{ name: 'productDetails', params: { id: product.id } }"
@@ -32,22 +32,22 @@
       </button>
 
       <!-- Контролы количества, если товар уже в корзине -->
-      <div v-else :class="$style['product__quantity-controls']">
+      <div v-else class="product__quantity-controls">
         <div
           @click.prevent="cartStore.decrementItemQuantity(product)"
-          :class="$style['quantity-button']">
+          class="quantity-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
             <path
               fill="currentColor"
               d="M5 11a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2H5Z"></path>
           </svg>
         </div>
-        <span :class="$style['quantity-value']">
+        <span class="quantity-value">
           {{ cartStore.itemQuantities[product.id] }}
         </span>
         <button
           @click.prevent="cartStore.incrementItemQuantity(product)"
-          :class="$style['quantity-button']">
+          class="quantity-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
             <path
               fill="currentColor"

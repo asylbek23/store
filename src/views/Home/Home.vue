@@ -127,3 +127,40 @@
 <style lang="scss" module>
   @import "Home.module.scss";
 </style>
+
+<style lang="scss">
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 30px;
+    margin-top: 30px;
+    justify-content: center;
+
+    position: relative;
+  }
+
+  .quick-view {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+    font-size: 18px;
+  }
+
+  .not-found {
+    font-size: 20px;
+    font-weight: 500;
+    // text-align: center;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+</style>

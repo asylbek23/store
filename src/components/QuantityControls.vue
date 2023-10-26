@@ -39,3 +39,48 @@
   // Определение свойств компонента: item и itemQuantity
   const props = defineProps(["item", "itemQuantity"]);
 </script>
+
+<style lang="scss">
+  .product {
+    &__quantity {
+      &-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+
+        font-weight: 600;
+        font-size: 16px;
+
+        margin: auto 15px 15px;
+
+        .quantity-value {
+          flex-grow: 1;
+          text-align: center;
+          margin: 0 5px;
+        }
+
+        .quantity-button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          background-color: #ffd8b4b8;
+          color: #e58939;
+          font-weight: 500;
+          border-radius: 8px;
+
+          min-height: 40px;
+          min-width: 40px;
+
+          font-size: 36px;
+          cursor: pointer;
+
+          svg {
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+  }
+</style>
