@@ -17,7 +17,7 @@ export default defineConfig({
     modules: true, // Включение поддержки модульных стилей
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "src/assets/scss/_smart-grid.scss";`,
+        additionalData: `@import "src/assets/scss/helpers/_smart-grid.scss";`,
       },
     },
   },

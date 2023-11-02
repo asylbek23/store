@@ -2,7 +2,7 @@ import { createApp } from "vue"; // Импорт функции создания
 import { createPinia } from "pinia"; // Импорт функции создания Pinia (стейт-менеджмент)
 import App from "./App.vue"; // Импорт главного компонента приложения
 import router from "./router"; // Импорт роутера
-import "@/scss/style.scss"; // Импорт глобальных стилей SCSS
+import "@/assets/scss/style.scss"; // Импорт глобальных стилей SCSS
 
 const app = createApp(App); // Создание экземпляра приложения Vue
 

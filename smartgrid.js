@@ -36,4 +36,4 @@ const settings = {
   },
 };
 
-smartgrid("./src/assets/scss/", settings);
+smartgrid("./src/assets/scss/helpers/", settings);
