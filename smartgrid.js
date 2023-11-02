@@ -7,7 +7,7 @@ const settings = {
   offset: "20px", // gutter width: px, %, rem
   mobileFirst: false, // 'min-width' : 'max-width'
   container: {
-    maxWidth: "1410px",
+    maxWidth: "1200px",
     fields: "30px", // side fields
   },
   breakPoints: {

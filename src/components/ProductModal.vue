@@ -22,8 +22,6 @@
 </template>
 
 <script setup>
-  import { defineProps } from "vue";
-
   // Пропсы для передачи данных продукта и функции закрытия модального окна
   const { product, closeModal } = defineProps(["product", "closeModal"]);
 </script>

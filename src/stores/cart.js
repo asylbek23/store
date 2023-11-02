@@ -1,5 +1,7 @@
 // Импорт функционала для создания нового хранилища из библиотеки pinia
 import { defineStore } from "pinia";
+import { getLocalStorageItem } from "@/helpers";
+import { localStorageMiddleware } from "@/helpers";
 
 // Экспорт функции для работы с хранилищем корзины, используя defineStore
 export const useCartStore = defineStore({
@@ -34,25 +36,14 @@ export const useCartStore = defineStore({
 
   // Действия (методы) для изменения состояния хранилища
   actions: {
-    // Увеличение количества указанного товара в корзине
-    incrementItemQuantity(product) {
-      if (!this.itemQuantities[product.id]) {
-        this.itemQuantities[product.id] = 1;
-        this.items.push(product);
-      } else {
-        this.itemQuantities[product.id]++;
-      }
-      this.saveStateToLocalStorage();
-    },
-
-    // Уменьшение количества указанного товара в корзине
-    decrementItemQuantity(product) {
-      if (
-        this.itemQuantities[product.id] &&
-        this.itemQuantities[product.id] > 1
-      ) {
-        this.itemQuantities[product.id] -= 1;
-      } else if (this.itemQuantities[product.id] === 1) {
+    updateItemQuantity(product, amount) {
+      const newQuantity = (this.itemQuantities[product.id] || 0) + amount;
+      if (newQuantity > 0) {
+        this.itemQuantities[product.id] = newQuantity;
+        if (!this.items.some((item) => item.id === product.id)) {
+          this.items.push(product);
+        }
+      } else if (newQuantity === 0) {
         delete this.itemQuantities[product.id];
         const productIndex = this.items.findIndex(
           (item) => item.id === product.id
@@ -60,18 +51,6 @@ export const useCartStore = defineStore({
         if (productIndex !== -1) {
           this.items.splice(productIndex, 1);
         }
-      }
-      this.saveStateToLocalStorage();
-    },
-
-    // Уменьшение количества указанного товара в корзине (специфично для корзины)
-    decrementItemQuantityInBasket(product) {
-      if (
-        this.itemQuantities[product.id] &&
-        this.itemQuantities[product.id] > 1
-      ) {
-        this.itemQuantities[product.id]--;
-        this.saveStateToLocalStorage();
       }
     },
 
@@ -88,41 +67,17 @@ export const useCartStore = defineStore({
       } else {
         this.items.push(product);
         this.addedItems[product.id] = true;
-        if (!this.itemQuantities[product.id]) {
-          this.itemQuantities[product.id] = 1;
-        } else {
-          this.itemQuantities[product.id]++;
-        }
+        this.itemQuantities[product.id] =
+          (this.itemQuantities[product.id] || 0) + 1;
       }
-
-      this.saveStateToLocalStorage();
     },
 
     // Очистка корзины
     clearCart() {
       this.items = [];
       this.addedItems = {};
-      this.saveStateToLocalStorage();
-    },
-
-    // Сохранение текущего состояния хранилища в LocalStorage
-    saveStateToLocalStorage() {
-      updateLocalStorage("cart-items", this.items);
-      updateLocalStorage("cart-item-quantities", this.itemQuantities);
     },
   },
+
+  plugins: [localStorageMiddleware],
 });
-
-// Функция для получения элемента из LocalStorage или возврата значения по умолчанию
-function getLocalStorageItem(key, defaultValue) {
-  try {
-    return JSON.parse(localStorage.getItem(key)) || defaultValue;
-  } catch {
-    return defaultValue;
-  }
-}
-
-// Функция для обновления элемента в LocalStorage
-function updateLocalStorage(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}

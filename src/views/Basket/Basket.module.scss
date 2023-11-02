@@ -140,20 +140,11 @@
       }
 
       .quantity-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        width: 35px !important;
+        width: 30px !important;
         height: 30px !important;
-        line-height: 100%;
 
         background-color: #e18c42;
         color: #fff;
-        border-radius: 4px;
-        font-size: 24px !important;
-        font-weight: 500;
-        cursor: pointer;
       }
 
       .is-disabled {

@@ -26,7 +26,7 @@
       <!-- Кнопка добавления товара в корзину, если товар уже не в корзине -->
       <button
         v-if="!cartStore.itemQuantities[product.id]"
-        @click.prevent="cartStore.incrementItemQuantity(product)"
+        @click.prevent="cartStore.updateItemQuantity(product, 1)"
         :class="$style['product__button']">
         Add to basket
       </button>
@@ -34,7 +34,7 @@
       <!-- Контролы количества, если товар уже в корзине -->
       <div v-else class="product__quantity-controls">
         <div
-          @click.prevent="cartStore.decrementItemQuantity(product)"
+          @click.prevent="cartStore.updateItemQuantity(product, -1)"
           class="quantity-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
             <path
@@ -42,11 +42,13 @@
               d="M5 11a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2H5Z"></path>
           </svg>
         </div>
+
         <span class="quantity-value">
           {{ cartStore.itemQuantities[product.id] }}
         </span>
+
         <button
-          @click.prevent="cartStore.incrementItemQuantity(product)"
+          @click.prevent="cartStore.updateItemQuantity(product, 1)"
           class="quantity-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
             <path

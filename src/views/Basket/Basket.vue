@@ -35,8 +35,8 @@
               <quantity-controls
                 :item="item"
                 :item-quantity="cartStore.itemQuantities[item.id]"
-                @increment="cartStore.incrementItemQuantity"
-                @decrement="cartStore.decrementItemQuantityInBasket" />
+                @increment="() => cartStore.updateItemQuantity(item, 1)"
+                @decrement="() => cartStore.updateItemQuantity(item, -1)" />
             </div>
           </div>
 
@@ -52,7 +52,7 @@
 
     <!-- Футер корзины с итоговыми данными -->
     <div :class="$style['basket__footer']">
-      <div :class="$style['container']" class="container">
+      <div :class="[$style['container'], 'container']">
         <!-- Итоговая информация о корзине -->
         <div :class="$style['basket__footer-info']">
           <div :class="$style['product-amount']">

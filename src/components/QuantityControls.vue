@@ -47,7 +47,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 15px;
+        /* gap: 15px; */
 
         font-weight: 600;
         font-size: 16px;
@@ -70,8 +70,8 @@
           font-weight: 500;
           border-radius: 8px;
 
-          min-height: 40px;
-          min-width: 40px;
+          height: 40px;
+          width: 40px;
 
           font-size: 36px;
           cursor: pointer;
