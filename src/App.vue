@@ -1,6 +1,6 @@
 <template>
   <!-- Основной макет для вложенных маршрутов -->
-  <router-view></router-view>
+  <router-view />
 </template>
 
 <script setup>

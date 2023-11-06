@@ -6,7 +6,7 @@
       <input
         type="text"
         class="search"
-        v-model="searchText"
+        v-model="searchProduct"
         placeholder="Search products" />
 
       <!-- Компонент фильтрации продуктов по категориям -->
@@ -38,17 +38,18 @@
   import ProductModal from "@/components/ProductModal.vue";
 
   // Состояние компонента
-  const products = ref(JSON.parse(localStorage.getItem("products")) || []);
-  const searchText = ref("");
+  const searchProduct = ref("");
   const filteredProducts = ref([]);
   const filteredCategories = ref([]);
   const selectedCategory = ref(null);
   const selectedProduct = ref(null);
+  const products = ref(JSON.parse(localStorage.getItem("products")) || []);
+  const bodyStyle = document.body.style;
 
   // Обновление выбранной категории
   const updateCategory = (category) => {
     selectedCategory.value = category;
-    searchText.value = "";
+    searchProduct.value = "";
   };
 
   // Открытие и закрытие модального окна с деталями продукта
@@ -65,13 +66,13 @@
   // Блокировка и разблокировка скролла страницы
   function disableScroll() {
     const scrollWidth = window.innerWidth - document.body.offsetWidth;
-    document.body.style.paddingRight = `${scrollWidth}px`;
-    document.body.style.overflow = "hidden";
+    bodyStyle.paddingRight = `${scrollWidth}px`;
+    bodyStyle.overflow = "hidden";
   }
 
   function enableScroll() {
-    document.body.style.paddingRight = "";
-    document.body.style.overflow = "";
+    bodyStyle.paddingRight = "";
+    bodyStyle.overflow = "";
   }
 
   // Обработка событий клавиатуры для закрытия модального окна
@@ -104,7 +105,7 @@
   watchEffect(() => {
     // Фильтрация продуктов по тексту поиска
     filteredProducts.value = products.value.filter((product) =>
-      product.title.toLowerCase().includes(searchText.value.toLowerCase())
+      product.title.toLowerCase().includes(searchProduct.value.toLowerCase())
     );
   });
 
@@ -129,15 +130,6 @@
     justify-content: center;
 
     position: relative;
-  }
-
-  .not-found {
-    font-size: 20px;
-    font-weight: 500;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
   }
 
   .home {
