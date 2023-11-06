@@ -37,40 +37,60 @@
   import { getProduct } from "@/api";
   import { useBreadcrumb } from "@/stores";
 
+  // Используем хук для доступа к текущему маршруту
   const route = useRoute();
+  // Состояние для хранения данных продукта
   const product = ref({});
+  // Доступ к хранилищу для работы с хлебными крошками
   const breadcrumb = useBreadcrumb();
+  // Состояние для хранения идентификатора интервала
   const intervalId = ref(null);
 
-  // Обработчик перед покиданием маршрута
-  onBeforeRouteLeave(async (to, from, next) => {
-    breadcrumb.resetTitle();
-    next();
-  });
-
-  // Обработчик перед обновлением маршрута
-  onBeforeRouteUpdate(async (to, from, next) => {
-    await getProduct(to.params.id);
-    next();
-  });
-
-  // Обработчик при монтировании компонента
-  onMounted(async () => {
-    const routeId = route.params.id;
-    await getProduct(routeId, product, breadcrumb); // Первая попытка загрузки
-
-    // Настроить повторные попытки каждые 2 секунд, если первая попытка не удалась
-    intervalId.value = setInterval(async () => {
-      await getProduct(routeId, product, breadcrumb);
-    }, 2000);
-  });
-
-  // Обработчик при размонтировании компонента
-  onUnmounted(() => {
-    // Остановите интервал, когда компонент размонтируется, чтобы избежать утечек памяти
-    if (intervalId.value) {
+  // Функция загрузки продукта
+  const loadProduct = async (id) => {
+    try {
+      await getProduct(id, product, breadcrumb);
       clearInterval(intervalId.value);
+      return true;
+    } catch (error) {
+      console.error("Ошибка при загрузке продукта:", error);
+      return false;
     }
+  };
+
+  // Хук, срабатывающий перед тем, как покинуть текущий маршрут
+  onBeforeRouteLeave(() => {
+    // Сбрасываем заголовок хлебных крошек
+    breadcrumb.resetTitle();
+    // Останавливаем интервал, чтобы избежать утечек памяти
+    clearInterval(intervalId.value);
+  });
+
+  // Хук, срабатывающий перед обновлением маршрута
+  onBeforeRouteUpdate(async (to) => {
+    // Загружаем продукт с новым ID из параметра маршрута
+    await loadProduct(to.params.id);
+  });
+
+  // Хук, срабатывающий при монтировании компонента
+  onMounted(async () => {
+    // ID продукта из параметра маршрута
+    const routeId = route.params.id;
+    // Пытаемся загрузить продукт
+    const wasSuccessful = await loadProduct(routeId, product, breadcrumb);
+
+    // Если загрузка не удалась, настраиваем интервал для повторных попыток
+    if (!wasSuccessful) {
+      intervalId.value = setInterval(() => {
+        loadProduct(routeId);
+      }, 2000);
+    }
+  });
+
+  // Хук, срабатывающий при размонтировании компонента
+  onUnmounted(() => {
+    // Очищаем интервал, чтобы избежать утечек памяти
+    clearInterval(intervalId.value);
   });
 </script>
 

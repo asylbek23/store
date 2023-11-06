@@ -18,14 +18,14 @@
       <!-- Компонент списка продуктов -->
       <Products :products="filteredProducts" :show-modal="showModal" />
 
-      <!-- Оверлей модального окна, отображается при выборе продукта -->
-      <div v-if="selectedProduct" class="overlay" @click="closeModal"></div>
-
       <!-- Модальное окно с деталями продукта -->
       <product-modal
         :product="selectedProduct"
         :close-modal="closeModal"
         v-if="selectedProduct" />
+
+      <!-- Оверлей модального окна, отображается при выборе продукта -->
+      <div v-if="selectedProduct" class="overlay" @click="closeModal"></div>
     </div>
   </div>
 </template>

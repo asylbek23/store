@@ -49,6 +49,7 @@ export const useCartStore = defineStore({
         const itemIndex = state.items.findIndex(
           (item) => item.id === product.id
         );
+
         if (itemIndex === -1 && newQuantity > 0) {
           state.items.push(product);
         } else if (newQuantity <= 0 && itemIndex !== -1) {
@@ -59,26 +60,31 @@ export const useCartStore = defineStore({
 
     // Переключение наличия указанного товара в корзине
     toggleItemInCart(product) {
-      const productIndex = this.items.findIndex(
-        (item) => item.id === product.id
-      );
+      this.$patch((state) => {
+        const productIndex = state.items.findIndex(
+          (item) => item.id === product.id
+        );
 
-      if (productIndex !== -1) {
-        this.items.splice(productIndex, 1);
-        this.addedItems[product.id] = false;
-        delete this.itemQuantities[product.id];
-      } else {
-        this.items.push(product);
-        this.addedItems[product.id] = true;
-        this.itemQuantities[product.id] =
-          (this.itemQuantities[product.id] || 0) + 1;
-      }
+        if (productIndex !== -1) {
+          state.items.splice(productIndex, 1);
+          state.addedItems[product.id] = false;
+          delete state.itemQuantities[product.id];
+        } else {
+          state.items.push(product);
+          state.addedItems[product.id] = true;
+          state.itemQuantities[product.id] =
+            (state.itemQuantities[product.id] || 0) + 1;
+        }
+      });
     },
 
     // Очистка корзины
     clearCart() {
-      this.items = [];
-      this.addedItems = {};
+      this.$patch((state) => {
+        state.items = [];
+        state.addedItems = {};
+        state.itemQuantities = {};
+      });
     },
   },
 });
