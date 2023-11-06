@@ -1,6 +1,5 @@
 import { createApp } from "vue"; // Импорт функции создания приложения Vue
 import { createPinia } from "pinia"; // Импорт функции создания Pinia (стейт-менеджмент)
-// import { localStorageMiddleware } from "@/helpers"; // Импорт нашего middleware
 import piniaPersistedState from "pinia-plugin-persistedstate";
 
 import App from "./App.vue"; // Импорт главного компонента приложения
