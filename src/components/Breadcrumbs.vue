@@ -42,6 +42,14 @@
   const breadcrumbNav = ref(null);
   const breadcrumbList = ref(null);
 
+  // Функция для проверки видимости хлебных крошек
+  function checkBreadcrumbVisibility() {
+    // Количество элементов хлебных крошек
+    const itemCount = breadcrumbList.value.querySelectorAll("li").length;
+    // Скрыть хлебные крошки, если элементов меньше 2
+    breadcrumbNav.value.style.display = itemCount > 1 ? "" : "none";
+  }
+
   // Отслеживание изменений маршрута и состояния хлебных крошек
   watch(
     [route, breadcrumb],
@@ -50,14 +58,6 @@
     },
     { immediate: true } // Немедленный вызов при инициализации
   );
-
-  // Функция для проверки видимости хлебных крошек
-  function checkBreadcrumbVisibility() {
-    // Количество элементов хлебных крошек
-    const itemCount = breadcrumbList.value.querySelectorAll("li").length;
-    // Скрыть хлебные крошки, если элементов меньше 2
-    breadcrumbNav.value.style.display = itemCount > 1 ? "" : "none";
-  }
 </script>
 
 <style scoped lang="scss">
