@@ -4,8 +4,8 @@
     <!-- Кнопка уменьшения количества товара -->
     <button
       @click.prevent="$emit('decrement', item)"
-      :class="[{ 'is-disabled': itemQuantity <= 1 }, 'quantity-button']"
-      :disabled="itemQuantity <= 1">
+      :disabled="itemQuantity <= 1"
+      :class="[{ 'is-disabled': itemQuantity <= 1 }, 'quantity-button']">
       <!-- Иконка минус -->
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
         <path

@@ -29,6 +29,7 @@ export const useCartStore = defineStore({
         (sum, item) => sum + item.price * (state.itemQuantities[item.id] || 0),
         0
       );
+
       return parseFloat(total.toFixed(2));
     },
   },

@@ -20,12 +20,12 @@
 
       <!-- Модальное окно с деталями продукта -->
       <product-modal
+        v-if="selectedProduct"
         :product="selectedProduct"
-        :close-modal="closeModal"
-        v-if="selectedProduct" />
+        :close-modal="closeModal" />
 
       <!-- Оверлей модального окна, отображается при выборе продукта -->
-      <div v-if="selectedProduct" class="overlay" @click="closeModal"></div>
+      <div v-if="selectedProduct" @click="closeModal" class="overlay"></div>
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@
     enableScroll();
   }
 
-  // Блокировка и разблокировка скролла страницы
+  // Функции для блокировки и разблокировки скролла
   function disableScroll() {
     const scrollWidth = window.innerWidth - document.body.offsetWidth;
     bodyStyle.paddingRight = `${scrollWidth}px`;
@@ -75,7 +75,7 @@
     bodyStyle.overflow = "";
   }
 
-  // Обработка событий клавиатуры для закрытия модального окна
+  // Обработчик событий клавиатуры для закрытия модального окна
   const onEsc = (event) => {
     if (event.key === "Escape" && selectedProduct.value) {
       closeModal();
@@ -97,7 +97,6 @@
     document.addEventListener("keydown", onEsc);
   });
 
-  // Очистка обработчика событий при уничтожении компонента
   onUnmounted(() => {
     document.removeEventListener("keydown", onEsc);
   });

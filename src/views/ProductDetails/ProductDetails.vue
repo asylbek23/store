@@ -53,7 +53,7 @@
       clearInterval(intervalId.value);
       return true;
     } catch (error) {
-      console.error("Ошибка при загрузке продукта:", error);
+      console.error("Error from getting product:", error);
       return false;
     }
   };

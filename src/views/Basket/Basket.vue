@@ -42,12 +42,19 @@
 
           <!-- Кнопка для удаления продукта из корзины -->
           <button
-            :class="$style['remove-product']"
-            @click="toggleItemInCart(item)">
+            @click="toggleItemInCart(item)"
+            :class="$style['remove-product']">
             Delete
           </button>
         </div>
       </div>
+
+      <button
+        v-if="cartStore.items.length > 0"
+        @click="clearCart()"
+        :class="$style['delete-all']">
+        Delete all products
+      </button>
     </div>
 
     <!-- Футер корзины с итоговыми данными -->
@@ -81,6 +88,9 @@
 
   // Функция для переключения товара в корзине (добавление/удаление)
   const toggleItemInCart = cartStore.toggleItemInCart;
+
+  // Функция для удаление всех товаров из корзины
+  const clearCart = cartStore.clearCart;
 
   // Функция для форматирования цены
   const formatPrice = (price) => price.toFixed(2);

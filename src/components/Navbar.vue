@@ -13,7 +13,7 @@
         <!-- Иконка корзины -->
         <img src="../assets/basket.png" alt="basket" width="20" height="20" />
         <!-- Количество товаров в корзине (отображается только если товары есть) -->
-        <div class="basket-product-amount" v-if="cartStore.itemCount > 0">
+        <div v-if="cartStore.itemCount > 0" class="basket-product-amount">
           {{ cartStore.itemCount }}
         </div>
       </router-link>

@@ -2,10 +2,10 @@
   <div class="products">
     <!-- Цикл по продуктам -->
     <router-link
-      :to="{ name: 'productDetails', params: { id: product.id } }"
-      :class="$style['product']"
       v-for="product in products"
-      :key="product.id">
+      :key="product.id"
+      :to="{ name: 'productDetails', params: { id: product.id } }"
+      :class="$style['product']">
       <!-- Область изображения продукта с возможностью быстрого просмотра -->
       <div :class="$style['product__img']" @click.prevent="showModal(product)">
         <img :src="product.image" :alt="product.title" />
