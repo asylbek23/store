@@ -90,6 +90,7 @@
         products.value.map((product) => product.category)
       );
       filteredCategories.value = Array.from(categories);
+      filteredProducts.value = products.value;
     } catch (error) {
       console.error("Error fetching products:", error);
     }
